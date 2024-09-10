@@ -5,9 +5,9 @@ library(dplyr)
 library(Matrix)
 
 # Load your data
-barcodes <- read.table("C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/GSM3635372_barcodes.tsv", header = FALSE, stringsAsFactors = FALSE)
-genes <- read.table("C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/GSM3635372_genes.tsv", header = FALSE, stringsAsFactors = FALSE)
-matrix <- readMM("C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/GSM3635372_matrix.mtx")
+barcodes <- read.table("/GSM3635372_barcodes.tsv", header = FALSE, stringsAsFactors = FALSE)
+genes <- read.table("/GSM3635372_genes.tsv", header = FALSE, stringsAsFactors = FALSE)
+matrix <- readMM("/GSM3635372_matrix.mtx")
 
 # Set row names and column names
 colnames(matrix) <- barcodes$V1
@@ -36,7 +36,7 @@ sc_data <- sc_data[mapped_genes, ]
 
 View(sc_data)
 library(openxlsx)
-write.xlsx(gene_mapping_all, file = "C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/gene_mapping_all.xlsx", row.names = FALSE)
+write.xlsx(gene_mapping_all, file = "/gene_mapping_all.xlsx", row.names = FALSE)
 #__________________________________________________________________________________________________________________
 
 # Create a named vector for mapping
@@ -54,13 +54,12 @@ gene_mapping_df <- data.frame(Ensembl_ID = ensembl_ids, Gene_Symbol = gene_symbo
 
 View(gene_mapping_df)
 # Save the dataframe to an Excel file
-write.xlsx(gene_mapping_df, file = "C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/gene_mapping_processed.xlsx", row.names = FALSE)
+write.xlsx(gene_mapping_df, file = "/gene_mapping_processed.xlsx", row.names = FALSE)
 
 #__________________________________________________
 #FOR FILTERING ONLY ASSIGNED GENES
 
 # Create a named vector for mapping
-
 
 # Filter the Seurat object to keep only genes that have a mapping
 mapped_genes <- rownames(sc_data) %in% names(ensembl_to_gene)
@@ -90,7 +89,7 @@ assigned_genes_df <- data.frame(
 )
 
 # Save the dataframe to an Excel file
-write.xlsx(assigned_genes_df, file = "C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/assigned_genes.xlsx", row.names = FALSE)
+write.xlsx(assigned_genes_df, file = /assigned_genes.xlsx", row.names = FALSE)
 
 
 #___________________________________________________
@@ -123,7 +122,7 @@ qc_data <- data.frame(
 )
 
 # Save the QC data to an Excel file
-write.xlsx(qc_data, file = "C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/qc_filtered_cells.xlsx", row.names = FALSE)
+write.xlsx(qc_data, file = "/qc_filtered_cells.xlsx", row.names = FALSE)
 #__________________________________________________________
 
 
@@ -159,7 +158,7 @@ DimPlot(sc_data, reduction = "tsne", label = TRUE)
 # Find differentially expressed genes
 sc_data.markers <- FindAllMarkers(sc_data, only.pos = FALSE, min.pct = 0.25, logfc.threshold = 0.01, test.use = "wilcox")
 print(sc_data.markers)
-write.xlsx(sc_data.markers, file = "C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/sc_markers.xlsx", row.names = FALSE)
+write.xlsx(sc_data.markers, file = "/sc_markers.xlsx", row.names = FALSE)
 
 markers <- nrow(significant_markers)
 cat("Number of significant markers: ",markers, "\n")
@@ -179,7 +178,7 @@ sc_data.markers$Gene_Symbol <- sc_data.markers$gene
 marker_info <- sc_data.markers %>% select(Ensembl_ID, avg_log2FC)
 
 # Save the dataframe to an Excel file
-write.xlsx(marker_info, file = "C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/marker_info.xlsx", row.names = FALSE)
+write.xlsx(marker_info, file = "/marker_info.xlsx", row.names = FALSE)
 
 
 top <- sc_data.markers  %>% top_n(n = 10, wt = avg_log2FC)
@@ -240,7 +239,7 @@ significant_markers_no_pseudogenes <- significant_markers_annot %>%
 print(significant_markers_no_pseudogenes)
 
 # Save the filtered significant markers to a new Excel file
-write.xlsx(significant_markers_no_pseudogenes, file = "C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/upregulated_no_pseudogenes.xlsx", row.names = FALSE)
+write.xlsx(significant_markers_no_pseudogenes, file = "/upregulated_no_pseudogenes.xlsx", row.names = FALSE)
 
 # Print the number of significant markers after removing pseudogenes
 marker_genes <- nrow(significant_markers_no_pseudogenes)
@@ -254,7 +253,7 @@ write.xlsx(upregulated_genes, file = "C:/Users/Saniya Kate/Desktop/PROJECTS/Seur
 
 downregulated_genes <- merge(downregulated_genes, gene_mapping_all, by.x = "gene", by.y = "hgnc_symbol", all.x = TRUE)
 View(downregulated_genes)
-write.xlsx(downregulated_genes, file = "C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/downregulated.xlsx", row.names = FALSE)
+write.xlsx(downregulated_genes, file = "/downregulated.xlsx", row.names = FALSE)
 
 
 
@@ -278,7 +277,7 @@ VlnPlot(sc_data, features = top_genes, ncol = 3)
 
 
 # Save the top marker genes list
-write.xlsx(top, file = "C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/top10_marker_genes.xlsx", row.names = FALSE)
+write.xlsx(top, file = "/top10_marker_genes.xlsx", row.names = FALSE)
 
 
 # Save the Seurat object
@@ -328,7 +327,7 @@ go_enrich_df <- go_enrich_df %>%
   mutate(Gene_Symbols = paste(gene_list$SYMBOL[match(unlist(strsplit(geneID, "/")), gene_list$ENTREZID)], collapse = "/"))
 
 # Save the merged results to an Excel file
-write.xlsx(go_enrich_df, file = "C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/go_enrichment_results_with_gene_names.xlsx", row.names = FALSE)
+write.xlsx(go_enrich_df, file = "/go_enrichment_results_with_gene_names.xlsx", row.names = FALSE)
 
 #________________________________________________________________
 
@@ -348,7 +347,7 @@ kegg_enrich_df<- kegg_enrich_df %>%
   mutate(Gene_Symbols = paste(gene_list$SYMBOL[match(unlist(strsplit(geneID, "/")), gene_list$ENTREZID)], collapse = "/"))
 
 # Save the results to an Excel file
-write.xlsx(kegg_enrich_df, file = "C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/kegg_enrichment_results.xlsx", row.names = FALSE)
+write.xlsx(kegg_enrich_df, file = "/kegg_enrichment_results.xlsx", row.names = FALSE)
 
 #________________________________________________________________
 #Vizualizing GO and KEGG:
@@ -375,9 +374,9 @@ library(dplyr)
 library(openxlsx)
 
 # Read upregulated and downregulated genes from files
-upregulated_genes <- read.xlsx("C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/upregulated.xlsx")
+upregulated_genes <- read.xlsx("/upregulated.xlsx")
 View(upregulated_genes)
-downregulated_genes <- read.xlsx("C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/downregulated.xlsx")
+downregulated_genes <- read.xlsx("/downregulated.xlsx")
 
 # Add status column
 upregulated_genes$status <- "upregulated"
@@ -410,7 +409,7 @@ names(ppi_network)[names(ppi_network) == "GeneSymbol"] <- "to_gene"
 ppi_network <- ppi_network[, c("from_gene", "to_gene", "from", "to", "combined_score")]
 head(ppi_network)
 
-write.table(ppi_network, file = "C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/ppi_network_with_genes.txt", sep = "\t", row.names = FALSE, col.names = TRUE)
+write.table(ppi_network, file = "ppi_network_with_genes.txt", sep = "\t", row.names = FALSE, col.names = TRUE)
 
 
 #____________________________________________________________________________
@@ -423,7 +422,7 @@ BiocManager::install("RCy3")
 library(RCy3)
 
 cytoscapePing()
-ppi_network_file <- "C:/Users/Saniya Kate/Desktop/PROJECTS/Seurat/ppi_network_with_genes.txt"
+ppi_network_file <- "/ppi_network_with_genes.txt"
 
 # Check if the file exists
 if (!file.exists(ppi_network_file)) {
